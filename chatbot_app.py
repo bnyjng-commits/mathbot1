@@ -31,31 +31,65 @@ st.markdown("""
         color: white !important;
     }
 
-    /* ─── 사이드바 버튼: 흰 배경 + 검은 글씨 ─── */
-    [data-testid="stSidebar"] .stButton > button {
+    /* ====================================================
+       사이드바 버튼 — 흰 배경 + 검은 글씨
+       Streamlit 기본 스타일을 모두 덮어씁니다
+    ==================================================== */
+    [data-testid="stSidebar"] button,
+    [data-testid="stSidebar"] button[kind="secondary"],
+    [data-testid="stSidebar"] button[kind="primary"],
+    [data-testid="stSidebar"] .stButton button,
+    [data-testid="stSidebar"] .stButton > button,
+    [data-testid="stSidebar"] div[data-testid="stButton"] button {
         background-color: #ffffff !important;
         color: #1a237e !important;
-        border: 2px solid #ffffff !important;
+        border: 2px solid #c5cae9 !important;
         border-radius: 10px !important;
-        font-weight: bold !important;
+        font-weight: 700 !important;
         font-size: 0.95rem !important;
         padding: 8px 16px !important;
         width: 100% !important;
         transition: all 0.2s ease !important;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.15) !important;
     }
 
-    /* 사이드바 버튼 호버 */
+    /* p 태그(버튼 내부 텍스트)도 강제로 검은색 */
+    [data-testid="stSidebar"] button p,
+    [data-testid="stSidebar"] .stButton button p,
+    [data-testid="stSidebar"] .stButton > button p {
+        color: #1a237e !important;
+        font-weight: 700 !important;
+    }
+
+    /* 호버 */
+    [data-testid="stSidebar"] button:hover,
     [data-testid="stSidebar"] .stButton > button:hover {
         background-color: #e8eaf6 !important;
         color: #1a237e !important;
-        border-color: #e8eaf6 !important;
-        box-shadow: 0 3px 10px rgba(0,0,0,0.2) !important;
+        border-color: #9fa8da !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2) !important;
     }
 
-    /* 사이드바 버튼 클릭(active) */
+    /* 호버 시 내부 p 태그 */
+    [data-testid="stSidebar"] button:hover p,
+    [data-testid="stSidebar"] .stButton > button:hover p {
+        color: #1a237e !important;
+    }
+
+    /* 클릭(active) */
+    [data-testid="stSidebar"] button:active,
     [data-testid="stSidebar"] .stButton > button:active {
         background-color: #c5cae9 !important;
         color: #1a237e !important;
+    }
+
+    /* 포커스 상태 */
+    [data-testid="stSidebar"] button:focus,
+    [data-testid="stSidebar"] .stButton > button:focus {
+        background-color: #ffffff !important;
+        color: #1a237e !important;
+        outline: none !important;
+        box-shadow: 0 0 0 3px rgba(57,73,171,0.3) !important;
     }
 
     /* 사이드바 selectbox */
@@ -66,15 +100,10 @@ st.markdown("""
         border: none !important;
     }
 
-    /* 사이드바 radio 버튼 텍스트 */
+    /* 사이드바 radio 텍스트 */
     [data-testid="stSidebar"] .stRadio label span {
         color: white !important;
         font-size: 0.95rem !important;
-    }
-
-    /* 사이드바 radio 버튼 선택된 항목 */
-    [data-testid="stSidebar"] .stRadio [data-testid="stMarkdownContainer"] p {
-        color: white !important;
     }
 
     /* 사이드바 text_input */
@@ -91,10 +120,7 @@ st.markdown("""
         border-color: rgba(255,255,255,0.3) !important;
     }
 
-    /* 사이드바 success/warning/error 박스 */
-    [data-testid="stSidebar"] .stAlert {
-        border-radius: 8px !important;
-    }
+    /* 사이드바 알림 박스 내 텍스트 */
     [data-testid="stSidebar"] .stAlert p {
         color: inherit !important;
     }
@@ -111,7 +137,7 @@ st.markdown("""
     .header-card h1 { margin: 0; font-size: 1.8rem; }
     .header-card p  { margin: 6px 0 0; opacity: 0.85; font-size: 0.95rem; }
 
-    /* 오늘의 학습 카드 */
+    /* 학습 카드 */
     .lesson-card {
         background: white;
         border-left: 5px solid #3949ab;
@@ -122,7 +148,7 @@ st.markdown("""
     }
     .lesson-card h3 { color: #1a237e; margin: 0 0 8px; }
 
-    /* 채팅 메시지 */
+    /* 채팅 — 학생 */
     .chat-user {
         background: #3949ab;
         color: white;
@@ -133,6 +159,8 @@ st.markdown("""
         margin-left: auto;
         word-break: keep-all;
     }
+
+    /* 채팅 — AI */
     .chat-ai {
         background: white;
         color: #212121;
@@ -144,7 +172,7 @@ st.markdown("""
         word-break: keep-all;
     }
 
-    /* 태그 뱃지 */
+    /* 뱃지 */
     .badge {
         display: inline-block;
         background: #e8eaf6;
@@ -156,7 +184,7 @@ st.markdown("""
         margin-right: 6px;
     }
 
-    /* 메인 영역 버튼 */
+    /* 메인 버튼 */
     .stButton > button {
         border-radius: 10px;
         font-weight: bold;
@@ -290,7 +318,7 @@ def get_system_prompt(mode: str, unit: str = "", topic: str = "") -> str:
 3. 확인 문제 2개 제시 (번호 매기기)
 학생이 답을 입력하면 맞고 틀림을 알려주고 해설은 1~2줄로만 하세요."""
 
-    else:  # free
+    else:
         return f"""{base}
 
 지금 모드: 자유 질문
@@ -326,7 +354,7 @@ def get_ai_response(user_message: str, system_prompt: str) -> str:
     if not client:
         return "⚠️ API 키를 먼저 입력해 주세요!"
 
-    history = st.session_state.messages[-10:]
+    history  = st.session_state.messages[-10:]
     messages = [{"role": m["role"], "content": m["content"]} for m in history]
     messages.append({"role": "user", "content": user_message})
 
@@ -345,18 +373,17 @@ def get_ai_response(user_message: str, system_prompt: str) -> str:
     except Exception as e:
         return f"❌ 오류 발생: {str(e)}"
 
-
 # ── 오늘의 학습 자동 시작 ────────────────────────────────────
 def start_daily_lesson(unit: str, day: int):
-    topic = UNITS[unit]["topics"][day - 1]["title"]
-    system_prompt = get_system_prompt("daily", unit, topic)
+    topic  = UNITS[unit]["topics"][day - 1]["title"]
+    system = get_system_prompt("daily", unit, topic)
     trigger = f"{unit} {day}일차 '{topic}' 학습을 시작해주세요."
 
     with st.spinner("선생님이 준비 중이에요... ✏️"):
-        ai_msg = get_ai_response(trigger, system_prompt)
+        ai_msg = get_ai_response(trigger, system)
 
     st.session_state.messages = []
-    st.session_state.messages.append({"role": "user", "content": trigger})
+    st.session_state.messages.append({"role": "user",      "content": trigger})
     st.session_state.messages.append({"role": "assistant", "content": ai_msg})
     st.session_state.lesson_started = True
     st.rerun()
@@ -389,14 +416,9 @@ with st.sidebar:
 
     # 모드 선택
     st.markdown("### 📚 학습 모드 선택")
-    mode_options = {
-        "📅 오늘의 학습": "daily",
-        "❓ 자유 질문": "free"
-    }
+    mode_options = {"📅 오늘의 학습": "daily", "❓ 자유 질문": "free"}
     selected_mode_label = st.radio(
-        "모드",
-        list(mode_options.keys()),
-        label_visibility="collapsed"
+        "모드", list(mode_options.keys()), label_visibility="collapsed"
     )
     new_mode = mode_options[selected_mode_label]
     if new_mode != st.session_state.mode:
@@ -417,7 +439,7 @@ with st.sidebar:
         )
         if selected_unit != st.session_state.selected_unit:
             st.session_state.selected_unit = selected_unit
-            st.session_state.messages = []
+            st.session_state.messages     = []
             st.session_state.lesson_started = False
 
         st.markdown("### 📆 일차 선택")
@@ -431,28 +453,34 @@ with st.sidebar:
         )
         if selected_day != st.session_state.selected_day:
             st.session_state.selected_day = selected_day
-            st.session_state.messages = []
+            st.session_state.messages     = []
             st.session_state.lesson_started = False
 
         st.markdown("---")
 
-        unit_icon = UNITS[st.session_state.selected_unit]["icon"]
+        unit_icon  = UNITS[st.session_state.selected_unit]["icon"]
         topic_name = UNITS[st.session_state.selected_unit]["topics"][st.session_state.selected_day - 1]["title"]
         st.markdown(f"**{unit_icon} {topic_name}**")
 
-        # ★ 학습 시작 버튼 (흰 배경 + 남색 글씨 → CSS로 적용됨)
+        # ★ 학습 시작 버튼 — HTML 버튼으로 대체하여 스타일 100% 보장
+        st.markdown("""
+        <style>
+        div[data-testid="stSidebar"] div.start-btn-wrap > button,
+        div[data-testid="stSidebar"] div.start-btn-wrap button {
+            background-color: #ffffff !important;
+            color: #1a237e !important;
+        }
+        </style>
+        """, unsafe_allow_html=True)
+
         if st.button("🚀 학습 시작!", use_container_width=True, key="btn_start"):
             if not st.session_state.api_key:
                 st.error("API 키를 먼저 입력해 주세요!")
             else:
-                start_daily_lesson(
-                    st.session_state.selected_unit,
-                    st.session_state.selected_day
-                )
+                start_daily_lesson(st.session_state.selected_unit, st.session_state.selected_day)
 
     st.markdown("---")
 
-    # ★ 대화 초기화 버튼 (흰 배경 + 남색 글씨 → CSS로 적용됨)
     if st.button("🗑️ 대화 초기화", use_container_width=True, key="btn_clear"):
         st.session_state.messages = []
         st.session_state.lesson_started = False
@@ -490,7 +518,7 @@ else:
     </div>
     """, unsafe_allow_html=True)
 
-# ── 오늘의 학습: 시작 전 안내 ────────────────────────────────
+# 오늘의 학습 — 시작 전 안내
 if st.session_state.mode == "daily" and not st.session_state.lesson_started:
     unit      = st.session_state.selected_unit
     day       = st.session_state.selected_day
@@ -522,7 +550,7 @@ if st.session_state.mode == "daily" and not st.session_state.lesson_started:
     st.markdown("<br>", unsafe_allow_html=True)
     st.info("👈 왼쪽 사이드바에서 **🚀 학습 시작!** 버튼을 눌러 시작하세요!")
 
-# ── 자유 질문: 예시 안내 ─────────────────────────────────────
+# 자유 질문 — 예시
 if st.session_state.mode == "free" and not st.session_state.messages:
     col1, col2, col3 = st.columns(3)
     examples = [
@@ -541,7 +569,7 @@ if st.session_state.mode == "free" and not st.session_state.messages:
             """, unsafe_allow_html=True)
     st.markdown("<br>", unsafe_allow_html=True)
 
-# ── 채팅 히스토리 출력 ────────────────────────────────────────
+# 채팅 히스토리
 for msg in st.session_state.messages:
     if msg["role"] == "user":
         if "학습을 시작해주세요" in msg["content"]:
@@ -559,9 +587,8 @@ for msg in st.session_state.messages:
         </div>
         """, unsafe_allow_html=True)
 
-# ── 채팅 입력 ─────────────────────────────────────────────────
+# 채팅 입력
 st.markdown("<br>", unsafe_allow_html=True)
-
 placeholder_text = (
     "답을 입력하거나, 모르는 부분을 물어보세요! 💬"
     if st.session_state.mode == "daily"
@@ -572,9 +599,7 @@ with st.form(key="chat_form", clear_on_submit=True):
     col_input, col_btn = st.columns([5, 1])
     with col_input:
         user_input = st.text_input(
-            "메시지",
-            placeholder=placeholder_text,
-            label_visibility="collapsed"
+            "메시지", placeholder=placeholder_text, label_visibility="collapsed"
         )
     with col_btn:
         submitted = st.form_submit_button("전송 ✈️", use_container_width=True)
@@ -598,7 +623,7 @@ if submitted and user_input.strip():
         st.session_state.messages.append({"role": "assistant", "content": ai_response})
         st.rerun()
 
-# ── 진행 상황 바 ──────────────────────────────────────────────
+# 진행 상황 바
 if st.session_state.mode == "daily" and st.session_state.lesson_started:
     st.markdown("---")
     unit       = st.session_state.selected_unit
