@@ -16,19 +16,89 @@ st.markdown("""
     .stApp {
         background-color: #f0f4ff;
     }
-    /* 사이드바 */
+
+    /* 사이드바 배경 */
     [data-testid="stSidebar"] {
         background-color: #1a237e;
-        color: white;
     }
-    [data-testid="stSidebar"] * {
+
+    /* 사이드바 일반 텍스트 */
+    [data-testid="stSidebar"] p,
+    [data-testid="stSidebar"] span,
+    [data-testid="stSidebar"] div,
+    [data-testid="stSidebar"] label,
+    [data-testid="stSidebar"] .stMarkdown {
         color: white !important;
     }
-    [data-testid="stSidebar"] .stSelectbox label,
-    [data-testid="stSidebar"] .stRadio label {
-        color: white !important;
-        font-weight: bold;
+
+    /* ─── 사이드바 버튼: 흰 배경 + 검은 글씨 ─── */
+    [data-testid="stSidebar"] .stButton > button {
+        background-color: #ffffff !important;
+        color: #1a237e !important;
+        border: 2px solid #ffffff !important;
+        border-radius: 10px !important;
+        font-weight: bold !important;
+        font-size: 0.95rem !important;
+        padding: 8px 16px !important;
+        width: 100% !important;
+        transition: all 0.2s ease !important;
     }
+
+    /* 사이드바 버튼 호버 */
+    [data-testid="stSidebar"] .stButton > button:hover {
+        background-color: #e8eaf6 !important;
+        color: #1a237e !important;
+        border-color: #e8eaf6 !important;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.2) !important;
+    }
+
+    /* 사이드바 버튼 클릭(active) */
+    [data-testid="stSidebar"] .stButton > button:active {
+        background-color: #c5cae9 !important;
+        color: #1a237e !important;
+    }
+
+    /* 사이드바 selectbox */
+    [data-testid="stSidebar"] .stSelectbox > div > div {
+        background-color: white !important;
+        color: #1a237e !important;
+        border-radius: 8px !important;
+        border: none !important;
+    }
+
+    /* 사이드바 radio 버튼 텍스트 */
+    [data-testid="stSidebar"] .stRadio label span {
+        color: white !important;
+        font-size: 0.95rem !important;
+    }
+
+    /* 사이드바 radio 버튼 선택된 항목 */
+    [data-testid="stSidebar"] .stRadio [data-testid="stMarkdownContainer"] p {
+        color: white !important;
+    }
+
+    /* 사이드바 text_input */
+    [data-testid="stSidebar"] .stTextInput > div > div > input {
+        background-color: white !important;
+        color: #1a237e !important;
+        border-radius: 8px !important;
+        border: none !important;
+        font-weight: 500 !important;
+    }
+
+    /* 사이드바 구분선 */
+    [data-testid="stSidebar"] hr {
+        border-color: rgba(255,255,255,0.3) !important;
+    }
+
+    /* 사이드바 success/warning/error 박스 */
+    [data-testid="stSidebar"] .stAlert {
+        border-radius: 8px !important;
+    }
+    [data-testid="stSidebar"] .stAlert p {
+        color: inherit !important;
+    }
+
     /* 헤더 카드 */
     .header-card {
         background: linear-gradient(135deg, #1a237e 0%, #3949ab 100%);
@@ -38,15 +108,9 @@ st.markdown("""
         margin-bottom: 20px;
         box-shadow: 0 4px 15px rgba(26,35,126,0.3);
     }
-    .header-card h1 {
-        margin: 0;
-        font-size: 1.8rem;
-    }
-    .header-card p {
-        margin: 6px 0 0;
-        opacity: 0.85;
-        font-size: 0.95rem;
-    }
+    .header-card h1 { margin: 0; font-size: 1.8rem; }
+    .header-card p  { margin: 6px 0 0; opacity: 0.85; font-size: 0.95rem; }
+
     /* 오늘의 학습 카드 */
     .lesson-card {
         background: white;
@@ -56,10 +120,8 @@ st.markdown("""
         margin-bottom: 16px;
         box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     }
-    .lesson-card h3 {
-        color: #1a237e;
-        margin: 0 0 8px;
-    }
+    .lesson-card h3 { color: #1a237e; margin: 0 0 8px; }
+
     /* 채팅 메시지 */
     .chat-user {
         background: #3949ab;
@@ -81,6 +143,7 @@ st.markdown("""
         box-shadow: 0 2px 6px rgba(0,0,0,0.1);
         word-break: keep-all;
     }
+
     /* 태그 뱃지 */
     .badge {
         display: inline-block;
@@ -92,34 +155,21 @@ st.markdown("""
         font-weight: bold;
         margin-right: 6px;
     }
-    /* 버튼 커스텀 */
+
+    /* 메인 영역 버튼 */
     .stButton > button {
         border-radius: 10px;
         font-weight: bold;
     }
+
     /* 입력창 */
     .stTextInput > div > input,
     .stTextArea > div > textarea {
         border-radius: 10px;
     }
+
     /* 구분선 */
-    hr {
-        border: none;
-        border-top: 2px solid #e8eaf6;
-        margin: 16px 0;
-    }
-    /* 문제 박스 */
-    .quiz-box {
-        background: #fffde7;
-        border: 2px solid #f9a825;
-        border-radius: 12px;
-        padding: 16px 20px;
-        margin: 10px 0;
-    }
-    .quiz-box h4 {
-        color: #e65100;
-        margin: 0 0 8px;
-    }
+    hr { border: none; border-top: 2px solid #e8eaf6; margin: 16px 0; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -128,89 +178,89 @@ UNITS = {
     "1단원: 소인수분해": {
         "icon": "🔢",
         "topics": [
-            {"day": 1, "title": "소수와 합성수", "emoji": "📌"},
-            {"day": 2, "title": "거듭제곱", "emoji": "📌"},
-            {"day": 3, "title": "소인수분해 방법", "emoji": "📌"},
-            {"day": 4, "title": "최대공약수", "emoji": "📌"},
-            {"day": 5, "title": "최소공배수", "emoji": "📌"},
-            {"day": 6, "title": "최대공약수와 최소공배수 활용", "emoji": "📌"},
+            {"day": 1, "title": "소수와 합성수"},
+            {"day": 2, "title": "거듭제곱"},
+            {"day": 3, "title": "소인수분해 방법"},
+            {"day": 4, "title": "최대공약수"},
+            {"day": 5, "title": "최소공배수"},
+            {"day": 6, "title": "최대공약수와 최소공배수 활용"},
         ]
     },
     "2단원: 정수와 유리수": {
         "icon": "➕",
         "topics": [
-            {"day": 1, "title": "양수와 음수", "emoji": "📌"},
-            {"day": 2, "title": "정수와 유리수", "emoji": "📌"},
-            {"day": 3, "title": "수직선과 절댓값", "emoji": "📌"},
-            {"day": 4, "title": "정수의 덧셈과 뺄셈", "emoji": "📌"},
-            {"day": 5, "title": "정수의 곱셈과 나눗셈", "emoji": "📌"},
-            {"day": 6, "title": "유리수의 사칙연산", "emoji": "📌"},
+            {"day": 1, "title": "양수와 음수"},
+            {"day": 2, "title": "정수와 유리수"},
+            {"day": 3, "title": "수직선과 절댓값"},
+            {"day": 4, "title": "정수의 덧셈과 뺄셈"},
+            {"day": 5, "title": "정수의 곱셈과 나눗셈"},
+            {"day": 6, "title": "유리수의 사칙연산"},
         ]
     },
     "3단원: 문자와 식": {
         "icon": "🔡",
         "topics": [
-            {"day": 1, "title": "문자의 사용과 식의 값", "emoji": "📌"},
-            {"day": 2, "title": "일차식과 수의 곱셈·나눗셈", "emoji": "📌"},
-            {"day": 3, "title": "일차식의 덧셈과 뺄셈", "emoji": "📌"},
-            {"day": 4, "title": "방정식과 항등식", "emoji": "📌"},
-            {"day": 5, "title": "일차방정식 풀기", "emoji": "📌"},
-            {"day": 6, "title": "일차방정식의 활용", "emoji": "📌"},
+            {"day": 1, "title": "문자의 사용과 식의 값"},
+            {"day": 2, "title": "일차식과 수의 곱셈·나눗셈"},
+            {"day": 3, "title": "일차식의 덧셈과 뺄셈"},
+            {"day": 4, "title": "방정식과 항등식"},
+            {"day": 5, "title": "일차방정식 풀기"},
+            {"day": 6, "title": "일차방정식의 활용"},
         ]
     },
     "4단원: 좌표와 그래프": {
         "icon": "📊",
         "topics": [
-            {"day": 1, "title": "순서쌍과 좌표", "emoji": "📌"},
-            {"day": 2, "title": "사분면", "emoji": "📌"},
-            {"day": 3, "title": "그래프 읽기", "emoji": "📌"},
-            {"day": 4, "title": "정비례 관계", "emoji": "📌"},
-            {"day": 5, "title": "반비례 관계", "emoji": "📌"},
-            {"day": 6, "title": "정비례·반비례 활용", "emoji": "📌"},
+            {"day": 1, "title": "순서쌍과 좌표"},
+            {"day": 2, "title": "사분면"},
+            {"day": 3, "title": "그래프 읽기"},
+            {"day": 4, "title": "정비례 관계"},
+            {"day": 5, "title": "반비례 관계"},
+            {"day": 6, "title": "정비례·반비례 활용"},
         ]
     },
     "5단원: 기본 도형": {
         "icon": "📐",
         "topics": [
-            {"day": 1, "title": "점, 선, 면, 각", "emoji": "📌"},
-            {"day": 2, "title": "직선, 반직선, 선분", "emoji": "📌"},
-            {"day": 3, "title": "각도와 맞꼭지각", "emoji": "📌"},
-            {"day": 4, "title": "평행선과 동위각·엇각", "emoji": "📌"},
-            {"day": 5, "title": "위치 관계", "emoji": "📌"},
-            {"day": 6, "title": "작도와 합동", "emoji": "📌"},
+            {"day": 1, "title": "점, 선, 면, 각"},
+            {"day": 2, "title": "직선, 반직선, 선분"},
+            {"day": 3, "title": "각도와 맞꼭지각"},
+            {"day": 4, "title": "평행선과 동위각·엇각"},
+            {"day": 5, "title": "위치 관계"},
+            {"day": 6, "title": "작도와 합동"},
         ]
     },
     "6단원: 평면도형": {
         "icon": "🔷",
         "topics": [
-            {"day": 1, "title": "다각형의 내각과 외각", "emoji": "📌"},
-            {"day": 2, "title": "삼각형의 내각의 합", "emoji": "📌"},
-            {"day": 3, "title": "원과 부채꼴", "emoji": "📌"},
-            {"day": 4, "title": "부채꼴의 호와 넓이", "emoji": "📌"},
-            {"day": 5, "title": "다각형의 넓이", "emoji": "📌"},
-            {"day": 6, "title": "평면도형 활용 문제", "emoji": "📌"},
+            {"day": 1, "title": "다각형의 내각과 외각"},
+            {"day": 2, "title": "삼각형의 내각의 합"},
+            {"day": 3, "title": "원과 부채꼴"},
+            {"day": 4, "title": "부채꼴의 호와 넓이"},
+            {"day": 5, "title": "다각형의 넓이"},
+            {"day": 6, "title": "평면도형 활용 문제"},
         ]
     },
     "7단원: 입체도형": {
         "icon": "🧊",
         "topics": [
-            {"day": 1, "title": "다면체", "emoji": "📌"},
-            {"day": 2, "title": "정다면체", "emoji": "📌"},
-            {"day": 3, "title": "회전체", "emoji": "📌"},
-            {"day": 4, "title": "기둥의 겉넓이와 부피", "emoji": "📌"},
-            {"day": 5, "title": "뿔의 겉넓이와 부피", "emoji": "📌"},
-            {"day": 6, "title": "구의 겉넓이와 부피", "emoji": "📌"},
+            {"day": 1, "title": "다면체"},
+            {"day": 2, "title": "정다면체"},
+            {"day": 3, "title": "회전체"},
+            {"day": 4, "title": "기둥의 겉넓이와 부피"},
+            {"day": 5, "title": "뿔의 겉넓이와 부피"},
+            {"day": 6, "title": "구의 겉넓이와 부피"},
         ]
     },
     "8단원: 통계": {
         "icon": "📈",
         "topics": [
-            {"day": 1, "title": "줄기와 잎 그림", "emoji": "📌"},
-            {"day": 2, "title": "도수분포표", "emoji": "📌"},
-            {"day": 3, "title": "히스토그램", "emoji": "📌"},
-            {"day": 4, "title": "도수분포다각형", "emoji": "📌"},
-            {"day": 5, "title": "상대도수", "emoji": "📌"},
-            {"day": 6, "title": "통계 자료 해석", "emoji": "📌"},
+            {"day": 1, "title": "줄기와 잎 그림"},
+            {"day": 2, "title": "도수분포표"},
+            {"day": 3, "title": "히스토그램"},
+            {"day": 4, "title": "도수분포다각형"},
+            {"day": 5, "title": "상대도수"},
+            {"day": 6, "title": "통계 자료 해석"},
         ]
     },
 }
@@ -240,17 +290,6 @@ def get_system_prompt(mode: str, unit: str = "", topic: str = "") -> str:
 3. 확인 문제 2개 제시 (번호 매기기)
 학생이 답을 입력하면 맞고 틀림을 알려주고 해설은 1~2줄로만 하세요."""
 
-    elif mode == "quiz":
-        return f"""{base}
-
-지금 모드: 확인 문제 풀기
-단원: {unit}
-주제: {topic}
-
-학생이 문제 풀다가 막힐 때 힌트를 주세요.
-- 힌트는 단계별로 조금씩 알려주세요.
-- 정답을 바로 알려주지 말고 스스로 풀도록 유도하세요."""
-
     else:  # free
         return f"""{base}
 
@@ -263,12 +302,11 @@ def get_system_prompt(mode: str, unit: str = "", topic: str = "") -> str:
 def init_session():
     defaults = {
         "api_key": "",
-        "messages": [],          # 채팅 히스토리
-        "mode": "daily",         # daily / quiz / free
+        "messages": [],
+        "mode": "daily",
         "selected_unit": list(UNITS.keys())[0],
         "selected_day": 1,
         "lesson_started": False,
-        "client": None,
     }
     for key, val in defaults.items():
         if key not in st.session_state:
@@ -276,7 +314,7 @@ def init_session():
 
 init_session()
 
-# ── Anthropic 클라이언트 생성 ─────────────────────────────────
+# ── Anthropic 클라이언트 ──────────────────────────────────────
 def get_client():
     if st.session_state.api_key:
         return anthropic.Anthropic(api_key=st.session_state.api_key)
@@ -288,11 +326,8 @@ def get_ai_response(user_message: str, system_prompt: str) -> str:
     if not client:
         return "⚠️ API 키를 먼저 입력해 주세요!"
 
-    # 메시지 히스토리 구성 (최근 10개만)
     history = st.session_state.messages[-10:]
-    messages = []
-    for msg in history:
-        messages.append({"role": msg["role"], "content": msg["content"]})
+    messages = [{"role": m["role"], "content": m["content"]} for m in history]
     messages.append({"role": "user", "content": user_message})
 
     try:
@@ -311,19 +346,16 @@ def get_ai_response(user_message: str, system_prompt: str) -> str:
         return f"❌ 오류 발생: {str(e)}"
 
 
-# ── 오늘의 학습 자동 시작 메시지 ─────────────────────────────
+# ── 오늘의 학습 자동 시작 ────────────────────────────────────
 def start_daily_lesson(unit: str, day: int):
-    unit_data = UNITS[unit]
-    topic_data = unit_data["topics"][day - 1]
-    topic = topic_data["title"]
-
+    topic = UNITS[unit]["topics"][day - 1]["title"]
     system_prompt = get_system_prompt("daily", unit, topic)
     trigger = f"{unit} {day}일차 '{topic}' 학습을 시작해주세요."
 
     with st.spinner("선생님이 준비 중이에요... ✏️"):
         ai_msg = get_ai_response(trigger, system_prompt)
 
-    st.session_state.messages = []  # 새 학습 시작 시 초기화
+    st.session_state.messages = []
     st.session_state.messages.append({"role": "user", "content": trigger})
     st.session_state.messages.append({"role": "assistant", "content": ai_msg})
     st.session_state.lesson_started = True
@@ -331,13 +363,13 @@ def start_daily_lesson(unit: str, day: int):
 
 
 # ════════════════════════════════════════════════════════════
-# ── 사이드바 ─────────────────────────────────────────────────
+# 사이드바
 # ════════════════════════════════════════════════════════════
 with st.sidebar:
     st.markdown("## 📐 중1 수학 AI 선생님")
     st.markdown("---")
 
-    # API 키 입력
+    # API 키
     st.markdown("### 🔑 API 키")
     api_key_input = st.text_input(
         "Anthropic API Key",
@@ -374,7 +406,7 @@ with st.sidebar:
 
     st.markdown("---")
 
-    # 단원 + 일차 선택 (오늘의 학습 모드일 때만)
+    # 단원 + 일차 선택
     if st.session_state.mode == "daily":
         st.markdown("### 📖 단원 선택")
         selected_unit = st.selectbox(
@@ -404,12 +436,12 @@ with st.sidebar:
 
         st.markdown("---")
 
-        # 학습 시작 버튼
         unit_icon = UNITS[st.session_state.selected_unit]["icon"]
         topic_name = UNITS[st.session_state.selected_unit]["topics"][st.session_state.selected_day - 1]["title"]
         st.markdown(f"**{unit_icon} {topic_name}**")
 
-        if st.button("🚀 학습 시작!", use_container_width=True):
+        # ★ 학습 시작 버튼 (흰 배경 + 남색 글씨 → CSS로 적용됨)
+        if st.button("🚀 학습 시작!", use_container_width=True, key="btn_start"):
             if not st.session_state.api_key:
                 st.error("API 키를 먼저 입력해 주세요!")
             else:
@@ -420,30 +452,30 @@ with st.sidebar:
 
     st.markdown("---")
 
-    # 대화 초기화 버튼
-    if st.button("🗑️ 대화 초기화", use_container_width=True):
+    # ★ 대화 초기화 버튼 (흰 배경 + 남색 글씨 → CSS로 적용됨)
+    if st.button("🗑️ 대화 초기화", use_container_width=True, key="btn_clear"):
         st.session_state.messages = []
         st.session_state.lesson_started = False
         st.rerun()
 
     st.markdown("---")
     st.markdown(
-        "<small style='opacity:0.7'>Made with ❤️ for 중1 students<br>Model: claude-sonnet-4-5</small>",
+        "<small style='opacity:0.8;'>Made with ❤️ for 중1 students<br>Model: claude-sonnet-4-5</small>",
         unsafe_allow_html=True
     )
 
 
 # ════════════════════════════════════════════════════════════
-# ── 메인 화면 ─────────────────────────────────────────────────
+# 메인 화면
 # ════════════════════════════════════════════════════════════
 
 # 헤더
 if st.session_state.mode == "daily":
-    unit = st.session_state.selected_unit
-    day = st.session_state.selected_day
-    topic = UNITS[unit]["topics"][day - 1]["title"]
+    unit      = st.session_state.selected_unit
+    day       = st.session_state.selected_day
+    topic     = UNITS[unit]["topics"][day - 1]["title"]
     unit_icon = UNITS[unit]["icon"]
-    today = datetime.now().strftime("%Y년 %m월 %d일")
+    today     = datetime.now().strftime("%Y년 %m월 %d일")
     st.markdown(f"""
     <div class="header-card">
         <h1>{unit_icon} 오늘의 수학 학습</h1>
@@ -458,12 +490,11 @@ else:
     </div>
     """, unsafe_allow_html=True)
 
-
-# ── 오늘의 학습 모드: 시작 전 안내 ───────────────────────────
+# ── 오늘의 학습: 시작 전 안내 ────────────────────────────────
 if st.session_state.mode == "daily" and not st.session_state.lesson_started:
-    unit = st.session_state.selected_unit
-    day = st.session_state.selected_day
-    topics = UNITS[unit]["topics"]
+    unit      = st.session_state.selected_unit
+    day       = st.session_state.selected_day
+    topics    = UNITS[unit]["topics"]
     unit_icon = UNITS[unit]["icon"]
 
     st.markdown(f"""
@@ -473,18 +504,17 @@ if st.session_state.mode == "daily" and not st.session_state.lesson_started:
     </div>
     """, unsafe_allow_html=True)
 
-    # 전체 커리큘럼 미리보기
     cols = st.columns(3)
     for i, t in enumerate(topics):
         with cols[i % 3]:
             is_today = (t["day"] == day)
             border = "border: 2px solid #3949ab;" if is_today else ""
-            bg = "background:#e8eaf6;" if is_today else "background:white;"
+            bg     = "background:#e8eaf6;"        if is_today else "background:white;"
+            badge  = '<span class="badge">오늘</span>' if is_today else ""
             st.markdown(f"""
             <div style="{bg}{border}border-radius:10px;padding:10px 14px;margin:4px 0;
                          box-shadow:0 1px 4px rgba(0,0,0,0.08);">
-                <b style="color:#1a237e;">{t['day']}일차</b>
-                {'<span class="badge">오늘</span>' if is_today else ''}<br>
+                <b style="color:#1a237e;">{t['day']}일차</b> {badge}<br>
                 <span style="font-size:0.9rem;">{t['title']}</span>
             </div>
             """, unsafe_allow_html=True)
@@ -492,19 +522,18 @@ if st.session_state.mode == "daily" and not st.session_state.lesson_started:
     st.markdown("<br>", unsafe_allow_html=True)
     st.info("👈 왼쪽 사이드바에서 **🚀 학습 시작!** 버튼을 눌러 시작하세요!")
 
-
-# ── 자유 질문 모드: 안내 문구 ─────────────────────────────────
+# ── 자유 질문: 예시 안내 ─────────────────────────────────────
 if st.session_state.mode == "free" and not st.session_state.messages:
     col1, col2, col3 = st.columns(3)
     examples = [
         ("🔢", "소인수분해가 뭐예요?"),
-        ("➕", "음수 곱하기 음수는 왜 양수예요?"),
+        ("➕", "음수 × 음수는 왜 양수예요?"),
         ("📐", "맞꼭지각이 뭐예요?"),
     ]
     for col, (icon, text) in zip([col1, col2, col3], examples):
         with col:
             st.markdown(f"""
-            <div class="lesson-card" style="text-align:center;cursor:pointer;">
+            <div class="lesson-card" style="text-align:center;">
                 <div style="font-size:2rem;">{icon}</div>
                 <p style="margin:4px 0;font-size:0.9rem;color:#3949ab;"><b>예시 질문</b></p>
                 <p style="margin:0;font-size:0.85rem;">"{text}"</p>
@@ -512,45 +541,39 @@ if st.session_state.mode == "free" and not st.session_state.messages:
             """, unsafe_allow_html=True)
     st.markdown("<br>", unsafe_allow_html=True)
 
-
 # ── 채팅 히스토리 출력 ────────────────────────────────────────
-chat_container = st.container()
-with chat_container:
-    for msg in st.session_state.messages:
-        if msg["role"] == "user":
-            # 학습 시작 트리거 메시지는 숨김
-            if "학습을 시작해주세요" in msg["content"]:
-                continue
-            st.markdown(f"""
-            <div style="display:flex;justify-content:flex-end;margin:6px 0;">
-                <div class="chat-user">🙋 {msg['content']}</div>
-            </div>
-            """, unsafe_allow_html=True)
-        else:
-            st.markdown(f"""
-            <div style="display:flex;justify-content:flex-start;margin:6px 0;">
-                <div style="font-size:1.5rem;margin-right:8px;">👩‍🏫</div>
-                <div class="chat-ai">{msg['content']}</div>
-            </div>
-            """, unsafe_allow_html=True)
-
+for msg in st.session_state.messages:
+    if msg["role"] == "user":
+        if "학습을 시작해주세요" in msg["content"]:
+            continue
+        st.markdown(f"""
+        <div style="display:flex;justify-content:flex-end;margin:6px 0;">
+            <div class="chat-user">🙋 {msg['content']}</div>
+        </div>
+        """, unsafe_allow_html=True)
+    else:
+        st.markdown(f"""
+        <div style="display:flex;justify-content:flex-start;margin:6px 0;align-items:flex-start;">
+            <div style="font-size:1.5rem;margin-right:8px;">👩‍🏫</div>
+            <div class="chat-ai">{msg['content']}</div>
+        </div>
+        """, unsafe_allow_html=True)
 
 # ── 채팅 입력 ─────────────────────────────────────────────────
 st.markdown("<br>", unsafe_allow_html=True)
 
-# 모드별 placeholder
-if st.session_state.mode == "daily":
-    placeholder = "답을 입력하거나, 모르는 부분을 물어보세요! 💬"
-else:
-    placeholder = "중1 수학 궁금한 것 뭐든지 물어보세요! 💬"
+placeholder_text = (
+    "답을 입력하거나, 모르는 부분을 물어보세요! 💬"
+    if st.session_state.mode == "daily"
+    else "중1 수학 궁금한 것 뭐든지 물어보세요! 💬"
+)
 
-# 입력폼 (Enter로 전송)
 with st.form(key="chat_form", clear_on_submit=True):
     col_input, col_btn = st.columns([5, 1])
     with col_input:
         user_input = st.text_input(
             "메시지",
-            placeholder=placeholder,
+            placeholder=placeholder_text,
             label_visibility="collapsed"
         )
     with col_btn:
@@ -560,38 +583,28 @@ if submitted and user_input.strip():
     if not st.session_state.api_key:
         st.error("⚠️ 먼저 API 키를 입력해 주세요!")
     else:
-        # 시스템 프롬프트 결정
         if st.session_state.mode == "daily":
-            unit = st.session_state.selected_unit
-            topic = UNITS[unit]["topics"][st.session_state.selected_day - 1]["title"]
-            system_prompt = get_system_prompt("daily", unit, topic)
+            unit   = st.session_state.selected_unit
+            topic  = UNITS[unit]["topics"][st.session_state.selected_day - 1]["title"]
+            system = get_system_prompt("daily", unit, topic)
         else:
-            system_prompt = get_system_prompt("free")
+            system = get_system_prompt("free")
 
-        # 유저 메시지 저장
-        st.session_state.messages.append({
-            "role": "user",
-            "content": user_input.strip()
-        })
+        st.session_state.messages.append({"role": "user", "content": user_input.strip()})
 
-        # AI 응답
         with st.spinner("선생님이 답변 중... ✏️"):
-            ai_response = get_ai_response(user_input.strip(), system_prompt)
+            ai_response = get_ai_response(user_input.strip(), system)
 
-        st.session_state.messages.append({
-            "role": "assistant",
-            "content": ai_response
-        })
+        st.session_state.messages.append({"role": "assistant", "content": ai_response})
         st.rerun()
 
-
-# ── 하단 진행 상황 (오늘의 학습 모드) ────────────────────────
+# ── 진행 상황 바 ──────────────────────────────────────────────
 if st.session_state.mode == "daily" and st.session_state.lesson_started:
     st.markdown("---")
-    msg_count = len([m for m in st.session_state.messages if m["role"] == "user"])
-    unit = st.session_state.selected_unit
+    unit       = st.session_state.selected_unit
     total_days = len(UNITS[unit]["topics"])
-    progress = st.session_state.selected_day / total_days
+    progress   = st.session_state.selected_day / total_days
+    msg_count  = len([m for m in st.session_state.messages if m["role"] == "user"])
 
     st.markdown(f"**{unit} 진행도** ({st.session_state.selected_day}/{total_days}일차)")
     st.progress(progress)
