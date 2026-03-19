@@ -32,8 +32,7 @@ st.markdown("""
     }
 
     /* ====================================================
-       사이드바 버튼 — 흰 배경 + 검은 글씨
-       Streamlit 기본 스타일을 모두 덮어씁니다
+       사이드바 버튼 — 흰 배경 + 남색 글씨
     ==================================================== */
     [data-testid="stSidebar"] button,
     [data-testid="stSidebar"] button[kind="secondary"],
@@ -53,7 +52,7 @@ st.markdown("""
         box-shadow: 0 2px 6px rgba(0,0,0,0.15) !important;
     }
 
-    /* p 태그(버튼 내부 텍스트)도 강제로 검은색 */
+    /* 버튼 내부 p 태그 (Streamlit 구조상 필수) */
     [data-testid="stSidebar"] button p,
     [data-testid="stSidebar"] .stButton button p,
     [data-testid="stSidebar"] .stButton > button p {
@@ -69,21 +68,19 @@ st.markdown("""
         border-color: #9fa8da !important;
         box-shadow: 0 4px 12px rgba(0,0,0,0.2) !important;
     }
-
-    /* 호버 시 내부 p 태그 */
     [data-testid="stSidebar"] button:hover p,
     [data-testid="stSidebar"] .stButton > button:hover p {
         color: #1a237e !important;
     }
 
-    /* 클릭(active) */
+    /* 클릭 */
     [data-testid="stSidebar"] button:active,
     [data-testid="stSidebar"] .stButton > button:active {
         background-color: #c5cae9 !important;
         color: #1a237e !important;
     }
 
-    /* 포커스 상태 */
+    /* 포커스 */
     [data-testid="stSidebar"] button:focus,
     [data-testid="stSidebar"] .stButton > button:focus {
         background-color: #ffffff !important;
@@ -92,12 +89,32 @@ st.markdown("""
         box-shadow: 0 0 0 3px rgba(57,73,171,0.3) !important;
     }
 
-    /* 사이드바 selectbox */
+    /* ====================================================
+       사이드바 selectbox — 흰 배경 + 남색 글씨
+    ==================================================== */
     [data-testid="stSidebar"] .stSelectbox > div > div {
         background-color: white !important;
         color: #1a237e !important;
         border-radius: 8px !important;
         border: none !important;
+    }
+
+    /* selectbox 선택된 값 텍스트 */
+    [data-testid="stSidebar"] .stSelectbox [data-baseweb="select"] div,
+    [data-testid="stSidebar"] .stSelectbox [data-baseweb="select"] span,
+    [data-testid="stSidebar"] .stSelectbox [data-baseweb="select"] input {
+        color: #1a237e !important;
+        background-color: white !important;
+    }
+
+    /* placeholder 텍스트 색상 (회색으로 구분) */
+    [data-testid="stSidebar"] .stSelectbox [data-baseweb="select"] [data-testid="stMarkdownContainer"] p {
+        color: #9e9e9e !important;
+    }
+
+    /* 드롭다운 화살표 영역 */
+    [data-testid="stSidebar"] .stSelectbox [data-baseweb="select"] svg {
+        fill: #1a237e !important;
     }
 
     /* 사이드바 radio 텍스트 */
@@ -120,7 +137,7 @@ st.markdown("""
         border-color: rgba(255,255,255,0.3) !important;
     }
 
-    /* 사이드바 알림 박스 내 텍스트 */
+    /* 사이드바 알림 박스 */
     [data-testid="stSidebar"] .stAlert p {
         color: inherit !important;
     }
@@ -293,6 +310,10 @@ UNITS = {
     },
 }
 
+# placeholder 역할을 할 상수
+UNIT_PLACEHOLDER = "📚 단원을 선택해주세요."
+DAY_PLACEHOLDER  = "📆 일차를 선택해주세요."
+
 # ── 시스템 프롬프트 ───────────────────────────────────────────
 def get_system_prompt(mode: str, unit: str = "", topic: str = "") -> str:
     base = """당신은 중학교 1학년 수학 선생님입니다.
@@ -332,8 +353,9 @@ def init_session():
         "api_key": "",
         "messages": [],
         "mode": "daily",
-        "selected_unit": list(UNITS.keys())[0],
-        "selected_day": 1,
+        # None = 아직 선택 안 함 (placeholder 표시)
+        "selected_unit": None,
+        "selected_day":  None,
         "lesson_started": False,
     }
     for key, val in defaults.items():
@@ -375,8 +397,8 @@ def get_ai_response(user_message: str, system_prompt: str) -> str:
 
 # ── 오늘의 학습 자동 시작 ────────────────────────────────────
 def start_daily_lesson(unit: str, day: int):
-    topic  = UNITS[unit]["topics"][day - 1]["title"]
-    system = get_system_prompt("daily", unit, topic)
+    topic   = UNITS[unit]["topics"][day - 1]["title"]
+    system  = get_system_prompt("daily", unit, topic)
     trigger = f"{unit} {day}일차 '{topic}' 학습을 시작해주세요."
 
     with st.spinner("선생님이 준비 중이에요... ✏️"):
@@ -396,7 +418,7 @@ with st.sidebar:
     st.markdown("## 📐 중1 수학 AI 선생님")
     st.markdown("---")
 
-    # API 키
+    # ── API 키 ───────────────────────────────────────────────
     st.markdown("### 🔑 API 키")
     api_key_input = st.text_input(
         "Anthropic API Key",
@@ -414,7 +436,7 @@ with st.sidebar:
 
     st.markdown("---")
 
-    # 모드 선택
+    # ── 모드 선택 ────────────────────────────────────────────
     st.markdown("### 📚 학습 모드 선택")
     mode_options = {"📅 오늘의 학습": "daily", "❓ 자유 질문": "free"}
     selected_mode_label = st.radio(
@@ -422,73 +444,131 @@ with st.sidebar:
     )
     new_mode = mode_options[selected_mode_label]
     if new_mode != st.session_state.mode:
-        st.session_state.mode = new_mode
-        st.session_state.messages = []
+        st.session_state.mode          = new_mode
+        st.session_state.messages      = []
         st.session_state.lesson_started = False
 
     st.markdown("---")
 
-    # 단원 + 일차 선택
+    # ── 단원 + 일차 선택 (오늘의 학습 모드) ─────────────────
     if st.session_state.mode == "daily":
+
+        # ── 단원 선택 ─────────────────────────────────────────
         st.markdown("### 📖 단원 선택")
-        selected_unit = st.selectbox(
+
+        # 첫 번째 항목을 placeholder 문자열로 설정
+        unit_options = [UNIT_PLACEHOLDER] + list(UNITS.keys())
+
+        # 현재 선택값의 index 계산
+        if st.session_state.selected_unit is None:
+            unit_index = 0                                      # placeholder
+        else:
+            unit_index = unit_options.index(st.session_state.selected_unit)
+
+        selected_unit_raw = st.selectbox(
             "단원",
-            list(UNITS.keys()),
-            index=list(UNITS.keys()).index(st.session_state.selected_unit),
-            label_visibility="collapsed"
+            unit_options,
+            index=unit_index,
+            label_visibility="collapsed",
+            key="sb_unit"
         )
-        if selected_unit != st.session_state.selected_unit:
-            st.session_state.selected_unit = selected_unit
-            st.session_state.messages     = []
+
+        # placeholder가 선택된 경우 None 처리
+        if selected_unit_raw == UNIT_PLACEHOLDER:
+            new_unit = None
+        else:
+            new_unit = selected_unit_raw
+
+        # 단원이 바뀌면 일차 초기화
+        if new_unit != st.session_state.selected_unit:
+            st.session_state.selected_unit  = new_unit
+            st.session_state.selected_day   = None   # 일차도 초기화
+            st.session_state.messages       = []
             st.session_state.lesson_started = False
 
+        # ── 일차 선택 ─────────────────────────────────────────
         st.markdown("### 📆 일차 선택")
-        max_day = len(UNITS[st.session_state.selected_unit]["topics"])
-        selected_day = st.selectbox(
-            "일차",
-            list(range(1, max_day + 1)),
-            index=st.session_state.selected_day - 1,
-            format_func=lambda d: f"{d}일차 - {UNITS[st.session_state.selected_unit]['topics'][d-1]['title']}",
-            label_visibility="collapsed"
-        )
-        if selected_day != st.session_state.selected_day:
-            st.session_state.selected_day = selected_day
-            st.session_state.messages     = []
-            st.session_state.lesson_started = False
+
+        # 단원이 선택된 경우에만 실제 일차 목록 생성
+        if st.session_state.selected_unit is not None:
+            topics   = UNITS[st.session_state.selected_unit]["topics"]
+            max_day  = len(topics)
+            day_options = [DAY_PLACEHOLDER] + [
+                f"{d}일차 - {topics[d-1]['title']}" for d in range(1, max_day + 1)
+            ]
+
+            if st.session_state.selected_day is None:
+                day_index = 0
+            else:
+                day_index = st.session_state.selected_day  # 1-based → index 1~
+
+            selected_day_raw = st.selectbox(
+                "일차",
+                day_options,
+                index=day_index,
+                label_visibility="collapsed",
+                key="sb_day"
+            )
+
+            if selected_day_raw == DAY_PLACEHOLDER:
+                new_day = None
+            else:
+                # "N일차 - 제목" 에서 N 추출
+                new_day = int(selected_day_raw.split("일차")[0])
+
+            if new_day != st.session_state.selected_day:
+                st.session_state.selected_day   = new_day
+                st.session_state.messages       = []
+                st.session_state.lesson_started = False
+
+        else:
+            # 단원 미선택 시 일차 selectbox는 placeholder만 표시
+            st.selectbox(
+                "일차",
+                [DAY_PLACEHOLDER],
+                index=0,
+                label_visibility="collapsed",
+                key="sb_day_disabled"
+            )
 
         st.markdown("---")
 
-        unit_icon  = UNITS[st.session_state.selected_unit]["icon"]
-        topic_name = UNITS[st.session_state.selected_unit]["topics"][st.session_state.selected_day - 1]["title"]
-        st.markdown(f"**{unit_icon} {topic_name}**")
+        # ── 선택 요약 + 학습 시작 버튼 ───────────────────────
+        if st.session_state.selected_unit and st.session_state.selected_day:
+            unit_icon  = UNITS[st.session_state.selected_unit]["icon"]
+            topic_name = UNITS[st.session_state.selected_unit]["topics"][
+                st.session_state.selected_day - 1]["title"]
+            st.markdown(f"**{unit_icon} {topic_name}**")
 
-        # ★ 학습 시작 버튼 — HTML 버튼으로 대체하여 스타일 100% 보장
-        st.markdown("""
-        <style>
-        div[data-testid="stSidebar"] div.start-btn-wrap > button,
-        div[data-testid="stSidebar"] div.start-btn-wrap button {
-            background-color: #ffffff !important;
-            color: #1a237e !important;
-        }
-        </style>
-        """, unsafe_allow_html=True)
-
-        if st.button("🚀 학습 시작!", use_container_width=True, key="btn_start"):
-            if not st.session_state.api_key:
-                st.error("API 키를 먼저 입력해 주세요!")
-            else:
-                start_daily_lesson(st.session_state.selected_unit, st.session_state.selected_day)
+            if st.button("🚀 학습 시작!", use_container_width=True, key="btn_start"):
+                if not st.session_state.api_key:
+                    st.error("API 키를 먼저 입력해 주세요!")
+                else:
+                    start_daily_lesson(
+                        st.session_state.selected_unit,
+                        st.session_state.selected_day
+                    )
+        else:
+            # 선택 미완료 시 버튼 비활성화처럼 표시
+            st.markdown(
+                "<div style='background:#3949ab;border-radius:10px;padding:9px 16px;"
+                "text-align:center;color:rgba(255,255,255,0.45);font-weight:700;"
+                "font-size:0.95rem;cursor:not-allowed;'>🚀 학습 시작!</div>",
+                unsafe_allow_html=True
+            )
+            st.caption("단원과 일차를 먼저 선택해주세요.")
 
     st.markdown("---")
 
     if st.button("🗑️ 대화 초기화", use_container_width=True, key="btn_clear"):
-        st.session_state.messages = []
+        st.session_state.messages       = []
         st.session_state.lesson_started = False
         st.rerun()
 
     st.markdown("---")
     st.markdown(
-        "<small style='opacity:0.8;'>Made with ❤️ for 중1 students<br>Model: claude-sonnet-4-5</small>",
+        "<small style='opacity:0.8;'>Made with ❤️ for 중1 students<br>"
+        "Model: claude-sonnet-4-5</small>",
         unsafe_allow_html=True
     )
 
@@ -497,8 +577,8 @@ with st.sidebar:
 # 메인 화면
 # ════════════════════════════════════════════════════════════
 
-# 헤더
-if st.session_state.mode == "daily":
+# ── 헤더 ────────────────────────────────────────────────────
+if st.session_state.mode == "daily" and st.session_state.selected_unit and st.session_state.selected_day:
     unit      = st.session_state.selected_unit
     day       = st.session_state.selected_day
     topic     = UNITS[unit]["topics"][day - 1]["title"]
@@ -510,6 +590,16 @@ if st.session_state.mode == "daily":
         <p>📅 {today} &nbsp;|&nbsp; 📖 {unit} &nbsp;|&nbsp; 🗓️ {day}일차: {topic}</p>
     </div>
     """, unsafe_allow_html=True)
+
+elif st.session_state.mode == "daily":
+    today = datetime.now().strftime("%Y년 %m월 %d일")
+    st.markdown(f"""
+    <div class="header-card">
+        <h1>📐 오늘의 수학 학습</h1>
+        <p>📅 {today} &nbsp;|&nbsp; 👈 단원과 일차를 선택하고 학습을 시작하세요!</p>
+    </div>
+    """, unsafe_allow_html=True)
+
 else:
     st.markdown("""
     <div class="header-card">
@@ -518,8 +608,35 @@ else:
     </div>
     """, unsafe_allow_html=True)
 
-# 오늘의 학습 — 시작 전 안내
-if st.session_state.mode == "daily" and not st.session_state.lesson_started:
+# ── 오늘의 학습 — 단원·일차 미선택 시 안내 ──────────────────
+if st.session_state.mode == "daily" and (
+    st.session_state.selected_unit is None or st.session_state.selected_day is None
+):
+    st.markdown("""
+    <div class="lesson-card">
+        <h3>👈 학습을 시작하려면?</h3>
+        <p>① 왼쪽에서 <b>단원</b>을 선택하세요.<br>
+           ② <b>일차</b>를 선택하세요.<br>
+           ③ <b>🚀 학습 시작!</b> 버튼을 누르세요.</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # 단원 카드 미리보기
+    cols = st.columns(4)
+    for i, (unit_name, unit_data) in enumerate(UNITS.items()):
+        with cols[i % 4]:
+            st.markdown(f"""
+            <div style="background:white;border-radius:10px;padding:12px 14px;
+                        margin:4px 0;box-shadow:0 1px 4px rgba(0,0,0,0.08);
+                        text-align:center;">
+                <div style="font-size:1.6rem;">{unit_data['icon']}</div>
+                <div style="font-size:0.8rem;color:#1a237e;font-weight:bold;
+                            margin-top:4px;">{unit_name}</div>
+            </div>
+            """, unsafe_allow_html=True)
+
+# ── 오늘의 학습 — 단원·일차 선택 후, 학습 시작 전 안내 ───────
+elif st.session_state.mode == "daily" and not st.session_state.lesson_started:
     unit      = st.session_state.selected_unit
     day       = st.session_state.selected_day
     topics    = UNITS[unit]["topics"]
@@ -528,7 +645,7 @@ if st.session_state.mode == "daily" and not st.session_state.lesson_started:
     st.markdown(f"""
     <div class="lesson-card">
         <h3>{unit_icon} {unit}</h3>
-        <p>오늘은 <b>{day}일차</b> 학습입니다!</p>
+        <p>오늘은 <b>{day}일차</b> 학습입니다! 사이드바의 🚀 버튼을 눌러 시작하세요.</p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -536,9 +653,9 @@ if st.session_state.mode == "daily" and not st.session_state.lesson_started:
     for i, t in enumerate(topics):
         with cols[i % 3]:
             is_today = (t["day"] == day)
-            border = "border: 2px solid #3949ab;" if is_today else ""
-            bg     = "background:#e8eaf6;"        if is_today else "background:white;"
-            badge  = '<span class="badge">오늘</span>' if is_today else ""
+            border   = "border: 2px solid #3949ab;" if is_today else ""
+            bg       = "background:#e8eaf6;"         if is_today else "background:white;"
+            badge    = '<span class="badge">오늘</span>' if is_today else ""
             st.markdown(f"""
             <div style="{bg}{border}border-radius:10px;padding:10px 14px;margin:4px 0;
                          box-shadow:0 1px 4px rgba(0,0,0,0.08);">
@@ -547,10 +664,7 @@ if st.session_state.mode == "daily" and not st.session_state.lesson_started:
             </div>
             """, unsafe_allow_html=True)
 
-    st.markdown("<br>", unsafe_allow_html=True)
-    st.info("👈 왼쪽 사이드바에서 **🚀 학습 시작!** 버튼을 눌러 시작하세요!")
-
-# 자유 질문 — 예시
+# ── 자유 질문 — 예시 ─────────────────────────────────────────
 if st.session_state.mode == "free" and not st.session_state.messages:
     col1, col2, col3 = st.columns(3)
     examples = [
@@ -569,7 +683,7 @@ if st.session_state.mode == "free" and not st.session_state.messages:
             """, unsafe_allow_html=True)
     st.markdown("<br>", unsafe_allow_html=True)
 
-# 채팅 히스토리
+# ── 채팅 히스토리 ────────────────────────────────────────────
 for msg in st.session_state.messages:
     if msg["role"] == "user":
         if "학습을 시작해주세요" in msg["content"]:
@@ -587,7 +701,7 @@ for msg in st.session_state.messages:
         </div>
         """, unsafe_allow_html=True)
 
-# 채팅 입력
+# ── 채팅 입력 ─────────────────────────────────────────────────
 st.markdown("<br>", unsafe_allow_html=True)
 placeholder_text = (
     "답을 입력하거나, 모르는 부분을 물어보세요! 💬"
@@ -607,6 +721,10 @@ with st.form(key="chat_form", clear_on_submit=True):
 if submitted and user_input.strip():
     if not st.session_state.api_key:
         st.error("⚠️ 먼저 API 키를 입력해 주세요!")
+    elif st.session_state.mode == "daily" and (
+        not st.session_state.selected_unit or not st.session_state.selected_day
+    ):
+        st.warning("👈 먼저 단원과 일차를 선택해 주세요!")
     else:
         if st.session_state.mode == "daily":
             unit   = st.session_state.selected_unit
@@ -623,8 +741,11 @@ if submitted and user_input.strip():
         st.session_state.messages.append({"role": "assistant", "content": ai_response})
         st.rerun()
 
-# 진행 상황 바
-if st.session_state.mode == "daily" and st.session_state.lesson_started:
+# ── 진행 상황 바 ──────────────────────────────────────────────
+if (st.session_state.mode == "daily"
+        and st.session_state.lesson_started
+        and st.session_state.selected_unit
+        and st.session_state.selected_day):
     st.markdown("---")
     unit       = st.session_state.selected_unit
     total_days = len(UNITS[unit]["topics"])
